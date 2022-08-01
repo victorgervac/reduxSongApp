@@ -1,70 +1,91 @@
-# Getting Started with Create React App
+# REDUX :
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+- **ACTION CREATOR: function return an action object with type and (optional) payload**
+- **produces and returns an action**
+- **gets fed to dispatch**
+- **forwards to middleware(this gets added with thunk(axios to work with async))(we can have manny)**
+- **sends action to all reducers**
+- **creates new state**
+- **waits till we update the state**
 
-## Available Scripts
+### Middleware is a function that gets called when an action is dispatched
+- middleware lets you wrap the store's dispatch method
+- stop or modify the action before it gets to the reducer
+- middleware is to support asynchronous actions
+- `https://redux.js.org/api/applymiddleware`
 
-In the project directory, you can run:
+### THUNK(helps with axios):{takes "something" function?  dispatch and getState: nothing pass to reducers  }
+- redux-thunk lets the action creators invert control by dispatching functions
+- receive dispatch as an argument and may call it asynchronously
+- handdle action creators but not primary job
+- action creators can return action objects 
+or
+- actions creators can return functions 
+- if an objects gets returned it must have a type(payload optional)
 
-### `npm start`
+### ACTION creators must return plain javascript objects with a type property 
+- by the time our actions gets to a reducer we wont have fetched our data
+- es2015 syntax for destructuring
+- async await gets transformed into es2015 syntax
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+- **bad syntax**
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+      export const fetchPosts = async () => {
+        const res = await JSONPlaceholder.get("/posts");
+        return {
+          type: 'FETCH_POSTS'
+          payload: res
+        };
+      }
 
-### `npm test`
+- no async promise and action redux to fast to wait for promise to return --use the thunk middleware
+- asynchronous action creators take some amount of  time for to get its data ready to go
+- a function that returns a async function(set up in app.js)
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+- **good stuff**
 
-### `npm run build`
+      export const fetchPosts = () => async dispatch => {
+        //dummy (()=>()) //when intiall setup to not get error
+        const response = await jsonPlaceholder.get('/posts');
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+        dispatch({ type: 'FETCH_POSTS', payload: response.data });
+      };
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+### REDUCER watching actions with type fetch post and get data
 
-### `npm run eject`
+- import here create indivudual 
+- each reducer gets called one time on open app
+- must return any value but never undefined  
+- produce state or data that to be used inside of your app using only previous state and the action
+- must not return reach out of itself to decide what value to return 
+- keep reducer pure!!
+      //bad return axios.get('/posts')
+      //good state + action 
+      //must NOT! mutate its input state argument 
+- (misleading i guess--conner case: you can `https://github.com/reduxjs/redux/blob/master/src/combineReducers.ts` bottom code runs reducer read code)
+  (mutate):
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+      const numbers = [1,2,3]
+      numbers === numbers //true
+      numbers === [1,2,3] //false //when not primitive js check if its the same in  memory
+- **this is a reducer code (always return brand new arays and objects!!)**
+- **two arguments the same order ALWAYS exiciting that belongs to this part of** **the state(department)**
+- **the old data and the action or form of data that is being sent to the reducer**
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+          const selectedSongReducer = (selectedSong = null, action) => {
+              //if the action type is SONG_SELECTED then return the payload of the action  
+            if (action.type === 'SONG_SELECTED') {
+              return action.payload;
+            } 
+              //other wise just return the selectedSong no action needed 
+            return selectedSong;
+          };`
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+### Redux DevTools
+- `https://github.com/reduxjs/redux-devtools`
+- [UdemySetupDev](https://www.udemy.com/course/react-redux/learn/lecture/12700653#content)
+- hhtp:localhost:3000/debug_session = $<session_logged_in>
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+      const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
+      const store = createStore(reducers,composeEnhancers(applyMiddleware(thunk)));
