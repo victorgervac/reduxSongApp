@@ -91,4 +91,6 @@ or
       const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
       const store = createStore(reducers,composeEnhancers(applyMiddleware(thunk)));
 
-### unmount and mount user
+### Auth
+- took kit pull user check on proctected routes for user
+- change a state,  state = { isSignedIn: null} do logic in component 
