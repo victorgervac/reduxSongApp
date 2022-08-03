@@ -7,7 +7,8 @@ const SongDetail = ({song}) => {
     return <div>Select a song</div>;
   }
   // console.log(props);
-  return <div><h3><strong>Song Details</strong></h3><p>Title: {song.title}</p> <p>Duration: {song.duration}</p></div>;
+  return <div><h3><strong>Song Details</strong></h3><p>Title: {song.title}</p> 
+  <p>Duration: {song.duration}</p></div>;
 };
 
 const mapStateToProps = state => {
