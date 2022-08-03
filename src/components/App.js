@@ -1,19 +1,36 @@
 import React from 'react';
 import SongList from './SongList';
 import SongDetail from './SongDetail';
+import {
+  Routes,
+  Route,
+} from "react-router-dom";
+import Home from './Home';
+import Invoices from './Invoices';
+import Invoice from './Invoice';
 
 const App = () => {
   return (
-    <div className="ui container grid">
-      <div className="ui row">
-        <div className="column eight wide">
-          <SongList />
-        </div>
-        <div className="column eight wide">
-          <SongDetail />
-        </div>
-      </div>
+    <div>
+      <Routes>
+        <Route path="/" element={<Home />}>
+        <Route path="songs" element={<SongList />} />
+        <Route path="invoices" element={<Invoices />}>
+          <Route path=":invoiceId" element={<Invoice />} />
+        </Route>
+        <Route
+          path="*"
+          element={
+            <main style={{ padding: "1rem" }}>
+              <p>There's nothing here!</p>
+            </main>
+          }
+        />
+         </Route>
+      </Routes>
     </div>
+
+   
   );
 };
 
