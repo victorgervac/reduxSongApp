@@ -1,4 +1,5 @@
 # REDUX :
+## toolkit createStore
 
 - **ACTION CREATOR: function return an action object with type and (optional) payload**
 - **produces and returns an action**
@@ -89,3 +90,5 @@ or
 
       const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
       const store = createStore(reducers,composeEnhancers(applyMiddleware(thunk)));
+
+### unmount and mount user
