@@ -83,14 +83,35 @@ or
             return selectedSong;
           };`
 
-### Redux DevTools
+### Redux DevTools 
 - `https://github.com/reduxjs/redux-devtools`
+
 - [UdemySetupDev](https://www.udemy.com/course/react-redux/learn/lecture/12700653#content)
+
 - hhtp:localhost:3000/debug_session = $<session_logged_in>
 
+- simple way(basic)
       const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
       const store = createStore(reducers,composeEnhancers(applyMiddleware(thunk)));
 
-### Auth
-- took kit pull user check on proctected routes for user
-- change a state,  state = { isSignedIn: null} do logic in component 
+
+### toolkit 
+`https://redux-toolkit.js.org/introduction/getting-started`
+- **toolkit is a library that helps you create a store**
+- Redux Toolkit introduces a new way of creating a store. It separates parts of the store into different files, known as slices.
+- A slice represents a single unit of the Redux state. It’s a collection of reducer logic and actions for a single feature in your app, typically defined together in a single file. 
+
+- createSlice(): accepts an object of reducer functions, a slice name, and an initial state value, and automatically generates a slice reducer with corresponding action creators and action types.
+- createSlice() returns an object with the following properties:
+  - reducer: the slice reducer function
+  - actions: an object with action creators
+  - actionTypes: an object with action types
+  - name: the name of the slice
+  - initialState: the initial state of the slice
+
+- `createAsyncThunk` accepts three parameters: a string action type, a callback function, and an optional options object.
+- The callback function is an important parameter as it has two key arguments that you should take into consideration:
+
+    - `arg`: this is the single value passed into the dispatch method when the action is called. If you need to pass multiple values, you can pass in an object
+    - `thunkAPI`: an object containing parameters normally passed to a Redux thunk function. Parameters include getState, dispatch, rejectWithValue, and more
+
