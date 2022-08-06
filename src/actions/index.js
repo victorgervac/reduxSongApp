@@ -8,16 +8,7 @@ export const selectSong = song => {
     payload: song
   };
 };
-export const signIn = () => {
-  return {
-    type: 'SIGN_IN'
-  }
-}
-export const signOut = () => {
-  return {
-    type: 'SIGN_OUT'
-  }
-}
+
 // export const  fetchUser = (id) => async dispatch =>{
 //   const response = await http.post('/users/sign_in',)
 

@@ -1,53 +1,73 @@
-import { signIn, signOut  } from "../actions/index"
-import { connect } from "react-redux"
-import { http } from "../apis/AxiosConfig"
-import { useState } from "react"
+import { useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from 'react-redux'
+import { userLogin } from "../actions/userAction";
+import { useForm } from 'react-hook-form'
+// import { useFormInput } from "../Hook/useFormInput";
 import toast, { Toaster } from 'react-hot-toast'; 
-import { useFormInput } from "../Hook/useFormInput";
+import { useEffect } from "react";
 
 const Login = () =>{
-  const email = useFormInput('', 'Email', 'emailInput')
-  const password = useFormInput('', 'Password', 'passwordInput')
-  const [signedOn, setSignedOn] = useState(null)
+  const dispatch = useDispatch()
+  const navigate = useNavigate()
+  const { loading, userInfo, error, success} = useSelector((state) => state.user)
+  const { register , handleSubmit } = useForm()
+  // const email = useFormInput('', 'Email', 'emailInput')
+  // const password = useFormInput('', 'Password', 'passwordInput')
+  
+  // const getFormsInput = () => {
+  //   const params = { ...data}
+  //   return { user: params }
+  // }
+  useEffect(() => {
+    if (userInfo) {
+      navigate('/')
+    }
+  }, [navigate, userInfo])
 
-  const handleSubmit = async e => {
-    e.preventDefault()
-    http
-        .post('/users/sign_in', { user: { email: email.value, password: password.value } })
-        .then( res => {
-          debugger
-          setSignedOn(true)
-          let currentSession = res.headers.authorization
-          // localStorage.setItem(AUTH_KEY, res.headers.authorization)
-          // handleLogin(res.headers.authorization)
-        })
-        .catch( err => {
-          console.log('login', err)
-          toast.error(err.response.data.error)
-        })
-        .finally(() => {
-         setSignedOn(false)
-          // navigate('/', { replace: true })
-        })
-    // handleLogin({ user: { email: email.value, password: password.value } }, history)
+  const submitForm = (data) => {
+    dispatch(userLogin(data))
   }
+  
   return(
-      <main className="container">
-        <Toaster
+      <main style={{marginTop:"5px", display: "flex", justifyContent: "center" }} className="container">
+
+         <Toaster
            position="top-center"
             reverseOrder={false}
         />
-        <form onSubmit={handleSubmit} id="login-form" className="mt-3 p-3 bg-gray-400/50">
-        <div id="title" className='mb-2 text-3xl'><strong>Login</strong></div>
-        <div id="email-label">{email.label}</div>
-        <label>E-mail</label>
-        <input autoFocus {...email}/>
-        <p id="password-label">{password.label}</p>
-        <label>Password</label>
-        <input type="password" autoComplete="off"{...password} />
-        <button id="login-button" className="btn-primary mt-3 p-3" type="submit">login</button>
-        </form>
+         {/* {error && <div>{toast.error(error)}</div>} */}
+         
+        <form onSubmit={handleSubmit(submitForm)} id="login-form" className="mt-3 p-3 bg-gray-400/50">
+        <div className='form-group'>
+        <label htmlFor='email'>Email</label>
+        <input
+          type='email'
+          className='form-input'
+          {...register('email')}
+          required
+        />
+      </div>
+      <div className='form-group'>
+        <label htmlFor='password'>Password</label>
+        <input
+          autoComplete="off"
+          type='password'
+          className='form-input'
+          {...register('password')}
+          required
+        />
+      </div>
+      <button type='submit' className='button' disabled={loading}>
+        Login
+      </button>
+    </form>
         </main>
   )
 }
-export default connect (null, {signIn, signOut })(Login)
+export default Login
+
+const styles = {
+  container: {
+    margin: "5px",
+  }
+}
